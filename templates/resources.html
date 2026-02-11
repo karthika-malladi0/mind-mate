@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+
+{% block title %}Emergency Resources - Mind Mate{% endblock %}
+
+{% block content %}
+<div class="alert alert-danger alert-lg" role="alert">
+    <h4 class="alert-heading">
+        <i class="fas fa-phone"></i> Emergency Resources
+    </h4>
+    <p>If you're in crisis, please reach out immediately. You're not alone.</p>
+</div>
+
+{% if resources %}
+    <div class="row">
+        {% for resource in resources %}
+            <div class="col-lg-6 mb-4">
+                <div class="resource-card">
+                    <h5>{{ resource.name }}</h5>
+                    <p class="text-muted">{{ resource.description }}</p>
+
+                    <div class="resource-contacts">
+                        {% if resource.phone %}
+                            <a href="tel:{{ resource.phone }}" class="btn btn-outline-danger btn-sm">
+                                <i class="fas fa-phone"></i> {{ resource.phone }}
+                            </a>
+                        {% endif %}
+                        
+                        {% if resource.email %}
+                            <a href="mailto:{{ resource.email }}" class="btn btn-outline-primary btn-sm">
+                                <i class="fas fa-envelope"></i> Email
+                            </a>
+                        {% endif %}
+                        
+                        {% if resource.website %}
+                            <a href="{{ resource.website }}" target="_blank" class="btn btn-outline-success btn-sm">
+                                <i class="fas fa-globe"></i> Website
+                            </a>
+                        {% endif %}
+                    </div>
+
+                    <p class="small text-muted mt-2">
+                        <i class="fas fa-map-marker-alt"></i> {{ resource.country }}
+                    </p>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="alert alert-info">
+        <i class="fas fa-info-circle"></i> Resources loading...
+    </div>
+{% endif %}
+
+<div class="mt-5">
+    <h3>What to do in a Crisis</h3>
+    <div class="row">
+        <div class="col-md-4 mb-3">
+            <div class="step-card">
+                <div class="step-number">1</div>
+                <h5>Reach Out</h5>
+                <p>Call a crisis line or trusted person immediately</p>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="step-card">
+                <div class="step-number">2</div>
+                <h5>Stay Safe</h5>
+                <p>Remove yourself from harmful situations</p>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="step-card">
+                <div class="step-number">3</div>
+                <h5>Get Help</h5>
+                <p>Visit ER or contact emergency services</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .resource-card {
+        border: 1px solid #ddd;
+        padding: 20px;
+        border-radius: 10px;
+        transition: all 0.3s;
+    }
+
+    .resource-card:hover {
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        border-color: #667eea;
+    }
+
+    .resource-contacts {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin: 15px 0;
+    }
+
+    .step-card {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 30px 20px;
+        border-radius: 10px;
+        text-align: center;
+    }
+
+    .step-number {
+        font-size: 2rem;
+        font-weight: bold;
+        background: rgba(255, 255, 255, 0.2);
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 15px;
+    }
+</style>
+{% endblock %}

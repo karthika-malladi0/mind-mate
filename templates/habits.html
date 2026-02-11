@@ -1,0 +1,208 @@
+{% extends "base.html" %}
+
+{% block title %}Habits - Mind Mate{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-lg-8">
+        <h1 class="mb-2">
+            <i class="fas fa-fire"></i> Habit Tracking
+        </h1>
+        <p class="text-muted">Build positive habits, one day at a time</p>
+    </div>
+    <div class="col-lg-4 text-end">
+        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newHabitModal">
+            <i class="fas fa-plus"></i> New Habit
+        </button>
+    </div>
+</div>
+
+<!-- Habits Grid -->
+{% if habits %}
+    <div class="row">
+        {% for habit in habits %}
+            <div class="col-md-6 mb-4">
+                <div class="card habit-card">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                            <h5 class="card-title mb-0">{{ habit.name }}</h5>
+                            <span class="badge bg-primary">{{ habit.status }}</span>
+                        </div>
+
+                        <p class="card-text text-muted small mb-3">{{ habit.description }}</p>
+
+                        <div class="habit-stats mb-3">
+                            <div class="stat">
+                                <span class="label">Current Streak</span>
+                                <span class="value">{{ habit.current_streak }} 🔥</span>
+                            </div>
+                            <div class="stat">
+                                <span class="label">Best Streak</span>
+                                <span class="value">{{ habit.best_streak }}</span>
+                            </div>
+                        </div>
+
+                        <div class="d-flex gap-2">
+                            <button class="btn btn-success flex-grow-1" onclick="logHabit('{{ habit.id }}')">
+                                <i class="fas fa-check"></i> Done Today
+                            </button>
+                            <button class="btn btn-outline-danger" onclick="deleteHabit('{{ habit.id }}')">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="alert alert-info">
+        <i class="fas fa-info-circle"></i> No habits yet. 
+        <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#newHabitModal">
+            Create your first habit
+        </button>
+    </div>
+{% endif %}
+
+<!-- New Habit Modal -->
+<div class="modal fade" id="newHabitModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="fas fa-plus"></i> New Habit</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form id="habitForm">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Habit Name</label>
+                        <input type="text" class="form-control" id="habitName" placeholder="e.g., Drink water" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Description</label>
+                        <textarea class="form-control" id="habitDesc" rows="2"></textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Category</label>
+                        <select class="form-select" id="habitCategory" required>
+                            <option>Exercise</option>
+                            <option>Sleep</option>
+                            <option>Eating</option>
+                            <option>Social</option>
+                            <option>Meditation</option>
+                            <option>Other</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Frequency</label>
+                        <select class="form-select" id="habitFreq" required>
+                            <option>Daily</option>
+                            <option>Weekly</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Target</label>
+                        <input type="text" class="form-control" id="habitTarget" placeholder="e.g., 8 glasses">
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Create Habit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+document.getElementById('habitForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const data = {
+        name: document.getElementById('habitName').value,
+        description: document.getElementById('habitDesc').value,
+        category: document.getElementById('habitCategory').value,
+        frequency: document.getElementById('habitFreq').value,
+        target: document.getElementById('habitTarget').value
+    };
+    
+    try {
+        const response = await fetch('/api/habits', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
+        
+        const result = await response.json();
+        alert(result.message);
+        location.reload();
+    } catch (error) {
+        alert('Error: ' + error.message);
+    }
+});
+
+function logHabit(habitId) {
+    fetch(`/api/habits/${habitId}/log`, { method: 'POST' })
+        .then(r => r.json())
+        .then(data => {
+            alert(data.message + '\nYour streak: ' + data.streak);
+            location.reload();
+        })
+        .catch(e => alert('Error: ' + e.message));
+}
+
+function deleteHabit(habitId) {
+    if (confirm('Delete this habit?')) {
+        fetch(`/api/habits/${habitId}`, { method: 'DELETE' })
+            .then(r => r.json())
+            .then(data => {
+                alert(data.message);
+                location.reload();
+            });
+    }
+}
+</script>
+
+<style>
+    .habit-card {
+        border: none;
+        border-left: 5px solid #667eea;
+        transition: transform 0.3s;
+    }
+
+    .habit-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    }
+
+    .habit-stats {
+        display: flex;
+        gap: 20px;
+        padding: 15px;
+        background: #f8f9fa;
+        border-radius: 8px;
+    }
+
+    .stat {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .stat .label {
+        font-size: 0.85rem;
+        color: #6c757d;
+    }
+
+    .stat .value {
+        font-size: 1.25rem;
+        font-weight: bold;
+        color: #667eea;
+    }
+</style>
+{% endblock %}

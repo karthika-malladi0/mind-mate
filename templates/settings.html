@@ -1,0 +1,136 @@
+{% extends "base.html" %}
+
+{% block title %}Settings - Mind Mate{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">
+    <i class="fas fa-cog"></i> Settings
+</h1>
+
+<div class="row">
+    <div class="col-lg-8">
+        <!-- Theme Settings -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-moon"></i> Theme</h5>
+            </div>
+            <div class="card-body">
+                <div class="form-check form-switch mb-3">
+                    <input class="form-check-input" type="checkbox" id="darkModeSwitch">
+                    <label class="form-check-label" for="darkModeSwitch">
+                        Dark Mode
+                    </label>
+                </div>
+                <small class="text-muted">Toggle dark mode for easier viewing at night</small>
+            </div>
+        </div>
+
+        <!-- Profile Settings -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-user"></i> Profile</h5>
+            </div>
+            <div class="card-body">
+                <form id="profileForm">
+                    <div class="mb-3">
+                        <label class="form-label">Full Name</label>
+                        <input type="text" class="form-control" id="fullName" value="{{ user.full_name }}">
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Bio</label>
+                        <textarea class="form-control" id="bio" rows="3">{{ user.bio or '' }}</textarea>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> Save Changes
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Account Info -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-info-circle"></i> Account Info</h5>
+            </div>
+            <div class="card-body">
+                <p class="mb-2">
+                    <strong>Member Since:</strong> {{ user.created_at.strftime('%B %d, %Y') }}
+                </p>
+                <p class="mb-2">
+                    <strong>User ID:</strong> <code>{{ user.id }}</code>
+                </p>
+            </div>
+        </div>
+
+        <!-- Danger Zone -->
+        <div class="card border-danger">
+            <div class="card-header bg-danger text-white">
+                <h5 class="mb-0"><i class="fas fa-exclamation-triangle"></i> Danger Zone</h5>
+            </div>
+            <div class="card-body">
+                <p>Once you log out, you'll need your access key to log back in.</p>
+                <a href="/logout" class="btn btn-danger">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sidebar Info -->
+    <div class="col-lg-4">
+        <div class="card bg-light">
+            <div class="card-body">
+                <h5 class="card-title"><i class="fas fa-lightbulb"></i> Tips</h5>
+                <ul class="mb-0">
+                    <li>Check in daily for best results</li>
+                    <li>Journal regularly to process emotions</li>
+                    <li>Set realistic, achievable goals</li>
+                    <li>Use meditation daily</li>
+                    <li>Track your habits consistently</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Theme toggle
+document.getElementById('darkModeSwitch').addEventListener('change', function() {
+    const theme = this.checked ? 'dark' : 'light';
+    
+    fetch('/api/settings/theme', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ theme: theme })
+    }).then(r => r.json()).then(data => {
+        alert(data.message);
+        location.reload();
+    });
+});
+
+// Profile form
+document.getElementById('profileForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const data = {
+        full_name: document.getElementById('fullName').value,
+        bio: document.getElementById('bio').value
+    };
+    
+    try {
+        const response = await fetch('/api/settings/profile', {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
+        
+        const result = await response.json();
+        alert(result.message);
+    } catch (error) {
+        alert('Error: ' + error.message);
+    }
+});
+</script>
+{% endblock %}

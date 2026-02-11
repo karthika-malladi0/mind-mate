@@ -1,0 +1,181 @@
+{% extends "base.html" %}
+
+{% block title %}Meditation - Mind Mate{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">
+    <i class="fas fa-om"></i> Guided Meditation & Breathing Exercises
+</h1>
+
+<div class="row">
+    {% for meditation in meditations %}
+        <div class="col-lg-4 mb-4">
+            <div class="card meditation-card h-100">
+                <div class="card-body text-center">
+                    <h4 class="card-title">{{ meditation.name }}</h4>
+                    <p class="card-text text-muted">{{ meditation.description }}</p>
+                    
+                    <div class="meditation-duration">
+                        <p class="fs-3 fw-bold">{{ meditation.duration }}</p>
+                        <p class="text-muted">minutes</p>
+                    </div>
+
+                    <p class="small mb-4">{{ meditation.guide }}</p>
+
+                    <button class="btn btn-primary btn-lg w-100" 
+                            onclick="startMeditation({{ meditation.id }}, '{{ meditation.type }}', {{ meditation.duration }})">
+                        <i class="fas fa-play"></i> Start
+                    </button>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+
+<!-- Meditation Progress Modal -->
+<div class="modal fade" id="meditationModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body text-center p-5">
+                <h3 id="meditationTitle" class="mb-4">Breathing Exercise</h3>
+                
+                <div id="timer" class="display-1 fw-bold text-primary mb-4">5:00</div>
+                
+                <div id="guidanceText" class="fs-5 mb-4 text-muted">
+                    Breathe in for 4 counts, hold for 4, exhale for 4
+                </div>
+
+                <button class="btn btn-warning btn-lg" onclick="stopMeditation()">
+                    <i class="fas fa-stop"></i> Stop
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Mood Logging Modal -->
+<div class="modal fade" id="moodLogModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">How do you feel now?</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form id="moodLogForm">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Mood Before</label>
+                        <input type="range" class="form-range" id="moodBefore" min="1" max="10" value="5">
+                        <span id="beforeValue">5</span>/10
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Mood After</label>
+                        <input type="range" class="form-range" id="moodAfter" min="1" max="10" value="5">
+                        <span id="afterValue">5</span>/10
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Log Session</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+let meditationTimer;
+let currentDuration;
+let currentType;
+
+document.getElementById('moodBefore').addEventListener('input', function() {
+    document.getElementById('beforeValue').textContent = this.value;
+});
+
+document.getElementById('moodAfter').addEventListener('input', function() {
+    document.getElementById('afterValue').textContent = this.value;
+});
+
+function startMeditation(id, type, duration) {
+    currentType = type;
+    currentDuration = duration;
+    
+    const modal = new bootstrap.Modal(document.getElementById('meditationModal'));
+    modal.show();
+    
+    let timeLeft = duration * 60;
+    
+    meditationTimer = setInterval(() => {
+        const mins = Math.floor(timeLeft / 60);
+        const secs = timeLeft % 60;
+        document.getElementById('timer').textContent = 
+            `${mins}:${secs.toString().padStart(2, '0')}`;
+        
+        timeLeft--;
+        
+        if (timeLeft < 0) {
+            clearInterval(meditationTimer);
+            modal.hide();
+            const moodModal = new bootstrap.Modal(document.getElementById('moodLogModal'));
+            moodModal.show();
+        }
+    }, 1000);
+}
+
+function stopMeditation() {
+    clearInterval(meditationTimer);
+    const modal = bootstrap.Modal.getInstance(document.getElementById('meditationModal'));
+    modal.hide();
+}
+
+document.getElementById('moodLogForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const data = {
+        duration: currentDuration,
+        type: currentType,
+        mood_before: parseInt(document.getElementById('moodBefore').value),
+        mood_after: parseInt(document.getElementById('moodAfter').value)
+    };
+    
+    try {
+        const response = await fetch('/api/meditation/session', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
+        
+        const result = await response.json();
+        alert(result.message + '\n\nMood improvement: ' + result.improvement);
+        
+        const modal = bootstrap.Modal.getInstance(document.getElementById('moodLogModal'));
+        modal.hide();
+    } catch (error) {
+        alert('Error: ' + error.message);
+    }
+});
+</script>
+
+<style>
+    .meditation-card {
+        border: none;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        transition: transform 0.3s;
+    }
+
+    .meditation-card:hover {
+        transform: translateY(-10px);
+    }
+
+    .meditation-duration {
+        background: rgba(255, 255, 255, 0.2);
+        padding: 20px;
+        border-radius: 10px;
+        margin: 20px 0;
+    }
+</style>
+{% endblock %}
+
