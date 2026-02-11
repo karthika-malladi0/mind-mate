@@ -8,7 +8,7 @@ class Config:
     """Base configuration"""
     SECRET_KEY = os.getenv('SECRET_KEY', 'dev-key-change-this')
     SQLALCHEMY_DATABASE_URI = os.getenv(
-        'DATABASE_URL', 'sqlite:///instance/mind_mate.db')
+        'DATABASE_URL', 'sqlite:///./instance/mind_mate.db')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     PERMANENT_SESSION_LIFETIME = 2592000  # 30 days
     SESSION_COOKIE_SECURE = False
