@@ -1,0 +1,190 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Mind Mate{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-lg-8">
+        <h1 class="mb-2">
+            <i class="fas fa-home"></i> Welcome, {{ user.full_name }}! 👋
+        </h1>
+        <p class="text-muted">Your mental wellness journey starts here</p>
+    </div>
+    <div class="col-lg-4 text-end">
+        {% if today_checkin %}
+            <span class="badge bg-success">✅ Today's check-in done!</span>
+        {% else %}
+            <span class="badge bg-warning">⏰ Complete today's check-in</span>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Stats Row -->
+<div class="row mb-4">
+    <div class="col-md-3 mb-3">
+        <div class="stat-card">
+            <div class="stat-icon mood">
+                {{ today_checkin.mood_emoji if today_checkin.mood_emoji else '😐' }}
+            </div>
+            <div class="stat-content">
+                <p class="stat-label">Today's Mood</p>
+                <p class="stat-value">{{ today_checkin.mood if today_checkin.mood else '-' }}/10</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3 mb-3">
+        <div class="stat-card">
+            <div class="stat-icon stress">
+                <i class="fas fa-fire"></i>
+            </div>
+            <div class="stat-content">
+                <p class="stat-label">Mood Streak</p>
+                <p class="stat-value">{{ mood_streak }} days 🔥</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3 mb-3">
+        <div class="stat-card">
+            <div class="stat-icon wellness">
+                <i class="fas fa-heart"></i>
+            </div>
+            <div class="stat-content">
+                <p class="stat-label">Wellness Score</p>
+                <p class="stat-value">{{ wellness_score }}/100</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3 mb-3">
+        <div class="stat-card">
+            <div class="stat-icon average">
+                <i class="fas fa-chart-line"></i>
+            </div>
+            <div class="stat-content">
+                <p class="stat-label">Avg Mood (7d)</p>
+                <p class="stat-value">{{ avg_mood }}/10</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Action Buttons -->
+<div class="row mb-4">
+    <div class="col-12">
+        <h5 class="mb-3">Quick Actions</h5>
+        <div class="d-grid gap-2 d-sm-flex flex-wrap">
+            <a href="/checkin" class="btn btn-lg btn-primary">
+                <i class="fas fa-smile"></i> Daily Check-in
+            </a>
+            <a href="/meditation" class="btn btn-lg btn-info">
+                <i class="fas fa-om"></i> Meditate Now
+            </a>
+            <a href="/journal" class="btn btn-lg btn-success">
+                <i class="fas fa-book"></i> Journal Entry
+            </a>
+            <a href="/analytics" class="btn btn-lg btn-warning">
+                <i class="fas fa-chart-bar"></i> View Trends
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Recent Check-ins -->
+<div class="row">
+    <div class="col-12">
+        <h5 class="mb-3">Recent Check-ins</h5>
+        {% if recent_checkins %}
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Date</th>
+                            <th>Mood</th>
+                            <th>Stress</th>
+                            <th>Sleep (hrs)</th>
+                            <th>Quality</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for checkin in recent_checkins %}
+                            <tr>
+                                <td>{{ checkin.check_in_date }}</td>
+                                <td><span class="fs-5">{{ checkin.mood_emoji }}</span> {{ checkin.mood }}/10</td>
+                                <td>
+                                    {% if checkin.stress_level %}
+                                        <div class="progress" style="height: 20px;">
+                                            <div class="progress-bar {% if checkin.stress_level > 7 %}bg-danger{% elif checkin.stress_level > 4 %}bg-warning{% else %}bg-success{% endif %}" 
+                                                 style="width: {{ checkin.stress_level * 10 }}%">
+                                                {{ checkin.stress_level }}
+                                            </div>
+                                        </div>
+                                    {% else %}
+                                        -
+                                    {% endif %}
+                                </td>
+                                <td>{{ checkin.sleep_hours or '-' }}</td>
+                                <td>
+                                    {% if checkin.sleep_quality %}
+                                        {% if checkin.sleep_quality >= 8 %}
+                                            <span class="badge bg-success">Good ✅</span>
+                                        {% elif checkin.sleep_quality >= 5 %}
+                                            <span class="badge bg-warning">Fair ⚠️</span>
+                                        {% else %}
+                                            <span class="badge bg-danger">Poor ❌</span>
+                                        {% endif %}
+                                    {% else %}
+                                        -
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="alert alert-info">
+                <i class="fas fa-info-circle"></i> No check-ins yet. 
+                <a href="/checkin">Start your first check-in today!</a>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<style>
+    .stat-card {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 20px;
+        border-radius: 10px;
+        display: flex;
+        gap: 15px;
+        align-items: center;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .stat-icon {
+        font-size: 2rem;
+        width: 60px;
+        height: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 50%;
+    }
+
+    .stat-label {
+        margin-bottom: 5px;
+        font-size: 0.9rem;
+        opacity: 0.9;
+    }
+
+    .stat-value {
+        font-size: 1.5rem;
+        font-weight: bold;
+        margin: 0;
+    }
+</style>
+{% endblock %}

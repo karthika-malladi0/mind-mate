@@ -1,0 +1,214 @@
+{% extends "base.html" %}
+
+{% block title %}Daily Check-in - Mind Mate{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8 mx-auto">
+        <h1 class="mb-1">
+            <i class="fas fa-smile"></i> How are you feeling today?
+        </h1>
+        <p class="text-muted mb-4">Take a moment to check in with yourself</p>
+
+        <div class="card shadow">
+            <div class="card-body p-4">
+                <form id="checkinForm">
+                    <!-- Mood -->
+                    <div class="mb-4">
+                        <label class="form-label fs-5 fw-bold">
+                            <i class="fas fa-face-smile"></i> Mood (1-10)
+                        </label>
+                        <div class="mood-selector d-flex gap-2 flex-wrap mb-3">
+                            {% for i in range(1, 11) %}
+                                <input type="radio" name="mood" value="{{ i }}" id="mood{{ i }}" class="d-none">
+                                <label for="mood{{ i }}" class="mood-btn" data-mood="{{ i }}">
+                                    {{ ['😢', '😟', '😐', '😐', '😐', '😐', '😊', '😊', '😊', '😄'][i-1] }}
+                                    <br>
+                                    <small>{{ i }}</small>
+                                </label>
+                            {% endfor %}
+                        </div>
+                        <small class="text-muted d-block">1 = Very Bad | 10 = Excellent</small>
+                    </div>
+
+                    <!-- Stress Level -->
+                    <div class="mb-4">
+                        <label for="stressLevel" class="form-label fs-5 fw-bold">
+                            <i class="fas fa-fire"></i> Stress Level (1-10)
+                        </label>
+                        <input type="range" class="form-range" id="stressLevel" name="stress_level" 
+                               min="1" max="10" value="5">
+                        <div class="d-flex justify-content-between mt-2 small text-muted">
+                            <span>Relaxed</span>
+                            <span id="stressValue">5</span>
+                            <span>Very Stressed</span>
+                        </div>
+                    </div>
+
+                    <!-- Sleep -->
+                    <div class="mb-4">
+                        <label for="sleepHours" class="form-label fs-5 fw-bold">
+                            <i class="fas fa-moon"></i> Sleep Last Night (hours)
+                        </label>
+                        <input type="number" class="form-control form-control-lg" id="sleepHours" 
+                               name="sleep_hours" min="0" max="24" step="0.5" placeholder="e.g., 7.5">
+                    </div>
+
+                    <!-- Sleep Quality -->
+                    <div class="mb-4">
+                        <label for="sleepQuality" class="form-label fs-5 fw-bold">
+                            <i class="fas fa-star"></i> Sleep Quality (1-10)
+                        </label>
+                        <input type="range" class="form-range" id="sleepQuality" name="sleep_quality" 
+                               min="1" max="10" value="5">
+                        <div class="d-flex justify-content-between mt-2 small text-muted">
+                            <span>Poor</span>
+                            <span id="sleepQualityValue">5</span>
+                            <span>Excellent</span>
+                        </div>
+                    </div>
+
+                    <!-- Exercise -->
+                    <div class="mb-4">
+                        <label for="exercise" class="form-label fs-5 fw-bold">
+                            <i class="fas fa-running"></i> Exercise (minutes)
+                        </label>
+                        <input type="number" class="form-control form-control-lg" id="exercise" 
+                               name="exercise_minutes" min="0" placeholder="How many minutes did you exercise?">
+                    </div>
+
+                    <!-- Water Intake -->
+                    <div class="mb-4">
+                        <label for="water" class="form-label fs-5 fw-bold">
+                            <i class="fas fa-droplet"></i> Water Intake (glasses)
+                        </label>
+                        <input type="number" class="form-control form-control-lg" id="water" 
+                               name="water_intake" min="0" placeholder="How many glasses of water?">
+                    </div>
+
+                    <!-- Social Interaction -->
+                    <div class="mb-4">
+                        <label for="social" class="form-label fs-5 fw-bold">
+                            <i class="fas fa-users"></i> Social Interaction
+                        </label>
+                        <select class="form-select form-select-lg" id="social" name="social_interaction">
+                            <option value="">Select...</option>
+                            <option value="alone">Alone</option>
+                            <option value="family">With Family</option>
+                            <option value="friends">With Friends</option>
+                            <option value="work">Work/School</option>
+                            <option value="mixed">Mixed</option>
+                        </select>
+                    </div>
+
+                    <!-- Notes -->
+                    <div class="mb-4">
+                        <label for="notes" class="form-label fs-5 fw-bold">
+                            <i class="fas fa-note-sticky"></i> Notes (Optional)
+                        </label>
+                        <textarea class="form-control form-control-lg" id="notes" name="notes" 
+                                  rows="3" placeholder="Anything else on your mind?"></textarea>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-lg w-100">
+                        <i class="fas fa-check"></i> Save Check-in
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Suggestions -->
+        {% if suggestions %}
+            <div class="alert alert-info mt-4">
+                <h5><i class="fas fa-lightbulb"></i> AI Suggestions for You:</h5>
+                <ul class="mb-0">
+                    {% for suggestion in suggestions %}
+                        <li>{{ suggestion }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+// Mood selector
+document.querySelectorAll('.mood-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+        document.querySelectorAll('.mood-btn').forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+        document.getElementById('mood' + this.dataset.mood).checked = true;
+    });
+});
+
+// Range sliders
+document.getElementById('stressLevel').addEventListener('input', function() {
+    document.getElementById('stressValue').textContent = this.value;
+});
+
+document.getElementById('sleepQuality').addEventListener('input', function() {
+    document.getElementById('sleepQualityValue').textContent = this.value;
+});
+
+// Form submit
+document.getElementById('checkinForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const formData = new FormData(document.getElementById('checkinForm'));
+    const data = {
+        mood: formData.get('mood') ? parseInt(formData.get('mood')) : null,
+        stress_level: formData.get('stress_level') ? parseInt(formData.get('stress_level')) : null,
+        sleep_hours: formData.get('sleep_hours') ? parseFloat(formData.get('sleep_hours')) : null,
+        sleep_quality: formData.get('sleep_quality') ? parseInt(formData.get('sleep_quality')) : null,
+        exercise_minutes: formData.get('exercise_minutes') ? parseInt(formData.get('exercise_minutes')) : 0,
+        water_intake: formData.get('water_intake') ? parseInt(formData.get('water_intake')) : 0,
+        social_interaction: formData.get('social_interaction') || null,
+        notes: formData.get('notes') || ''
+    };
+    
+    try {
+        const response = await fetch('/api/checkin', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
+        
+        const result = await response.json();
+        
+        if (response.ok) {
+            alert('✅ Check-in saved!\n\n' + 
+                  '🎵 Suggestion: ' + result.music.name + '\n' +
+                  '🎯 Activity: ' + result.activity);
+            document.getElementById('checkinForm').reset();
+            document.querySelectorAll('.mood-btn').forEach(b => b.classList.remove('active'));
+        } else {
+            alert('❌ ' + result.error);
+        }
+    } catch (error) {
+        alert('❌ Error: ' + error.message);
+    }
+});
+</script>
+
+<style>
+    .mood-btn {
+        width: 60px;
+        height: 70px;
+        padding: 8px;
+        border: 2px solid #ddd;
+        border-radius: 10px;
+        cursor: pointer;
+        text-align: center;
+        transition: all 0.3s;
+        font-size: 1.5rem;
+    }
+
+    .mood-btn:hover, .mood-btn.active {
+        border-color: #667eea;
+        background-color: #f0f4ff;
+        transform: scale(1.05);
+    }
+</style>
+{% endblock %}
