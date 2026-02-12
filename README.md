@@ -1,112 +1,168 @@
 # 🧠 MindMate – Mental Wellness Tracker
 
-MindMate is a full-stack mental wellness web application that helps users track their moods, maintain journaling habits, build daily streaks, and visualize emotional trends over time.
+MindMate is a full-stack mental wellness web application built using Flask (Python) that allows users to track moods, maintain journals, build habits, follow goals, and improve overall well-being through simple daily check-ins and insights.
 
-This project was built for a college hackathon using **Flask (Python)** for the backend and **HTML, CSS, JavaScript, and Chart.js** for the frontend.
+This project was developed as a hackathon submission to demonstrate full-stack development skills.
 
 ---
 
-## ✨ Features
+# 🚀 Features
 
 - 🔐 User Authentication (Register / Login / Logout)
 - 😊 Daily Mood Check-ins
-- 📈 Analytics Dashboard with Mood Charts
-- 🔥 Streak Tracking System
-- 💡 Wellness Suggestions Based on Mood
-- 📓 Personal Journal with History
-- 🗑 Delete Journal Entries & Mood History
-- 🎨 Clean, Responsive User Interface
+- 📓 Personal Journal
+- 🔥 Habit Tracking
+- 🎯 Goal Tracking
+- 📊 Analytics Dashboard with Charts
+- 🧘 Meditation & Relaxation Section
+- 🎵 Mood-based Music Suggestions
+- 📚 Mental Health Resources
+- ⚙️ User Settings Panel
+- 🎨 Responsive UI using Bootstrap
 
 ---
 
-## 🛠 Tech Stack
+# 🛠 Tech Stack
 
-| Layer       | Technology Used |
-|------------|-----------------|
-| Backend     | Flask (Python)  |
-| Database    | SQLite          |
-| Frontend    | HTML, CSS, JavaScript |
-| Charts      | Chart.js        |
-| Styling     | Bootstrap + Custom CSS |
+**Backend**
+- Python
+- Flask
+
+**Database**
+- SQLite
+
+**Frontend**
+- HTML
+- CSS
+- JavaScript
+- Bootstrap
+- Chart.js
 
 ---
 
-## 📂 Project Structure
+# 📂 Project Structure
+
+```
 mindmate/
 │
 ├── app.py
+├── config.py
+├── database.py
 ├── requirements.txt
-├── mindmate.db (created automatically)
+├── mindmate.db
 │
 ├── templates/
-│ ├── index.html
-│ ├── dashboard.html
-│ ├── journal.html
-│ └── login/register pages
+│   ├── analytics.html
+│   ├── base.html
+│   ├── checkin.html
+│   ├── dashboard.html
+│   ├── error.html
+│   ├── goals.html
+│   ├── habits.html
+│   ├── journal.html
+│   ├── login.html
+│   ├── meditation.html
+│   ├── music.html
+│   ├── resources.html
+│   └── settings.html
 │
 ├── static/
-│ ├── css/
-│ ├── js/
-│ └── images/
-
+│   ├── css/
+│   │   └── style.css
+│   ├── js/
+│   │   └── main.js
+│   ├── images/
+│   └── favicon.ico
+```
 
 ---
 
-## ⚙️ How to Run This Project Locally
+# ⚙️ How to Run This Project
 
-### 1️⃣ Clone the Repository
+## Step 1: Clone the Repository
 
 ```bash
-git clone https://github.com/karthika-malladi0/mind-mate.git
-cd mind-mate
+git clone https://github.com/YOUR-USERNAME/mindmate.git
+cd mindmate
+```
 
+---
+
+## Step 2: Create Virtual Environment
+
+```bash
 python -m venv venv
+```
 
+Activate it:
+
+### Windows:
+```bash
 venv\Scripts\activate
+```
 
+### Mac/Linux:
+```bash
 source venv/bin/activate
+```
 
+---
+
+## Step 3: Install Dependencies
+
+```bash
 pip install -r requirements.txt
+```
 
+---
+
+## Step 4: Run the Application
+
+```bash
 python app.py
+```
 
+You should see:
+
+```
 Running on http://127.0.0.1:5000
+```
 
-🗄 Database
+Open that link in your browser.
 
-The app uses SQLite.
-The database file is automatically created the first time you run the app.
+---
 
-🧠 Key Learning Outcomes
+# 🗄 Database Information
 
-This project demonstrates:
+This project uses SQLite.
 
-Backend route handling with Flask
+The database file (`mindmate.db`) is already included but will also auto-update when the application runs.
 
-Database design and CRUD operations
+---
 
-API communication using JavaScript Fetch
+# 🧠 What This Project Demonstrates
 
-Data visualization with Chart.js
+- Flask backend routing and architecture
+- Database design with SQLite
+- Full CRUD functionality
+- Frontend + Backend integration
+- REST-style API calls using JavaScript Fetch
+- Data visualization using Chart.js
+- User authentication and session handling
+- Clean UI with responsive design
 
-User session management
+---
 
-Full-stack integration
+# 🔮 Improvements (if there are no time constrains)
 
-🚀 Future Improvements
+- Cloud deployment (Render/Heroku/AWS)
+- AI-based mood insights
+- Email reminders for habits
+- Mobile app version
 
-Cloud deployment
+---
 
-AI-based mood analysis
+# 👨‍💻 Hackathon Submission
 
-Email or notification reminders
-
-Mobile-friendly version
-
-👨‍💻 Developed For
-
-College Hackathon Project – Built as a beginner-friendly full-stack mental wellness tracking system.
-
-
-
+MindMate is designed as a beginner-friendly but feature-rich mental wellness platform that showcases practical full-stack development and user-centered design.
 
