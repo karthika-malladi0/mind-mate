@@ -1,3 +1,20 @@
+# Team Name: UniForge
+
+# Team members:-
+ Karthika. M
+ Navitha Koya
+ Shilpa Sharma
+ Jessika S
+
+# Problem Statment-
+Nowadays students are experiencing high levels of stress and anxiety and lack of access to care and ineffective existing tools making it harder to manage their mental wellness.
+
+# Why the problem is relevent.
+Nowadays, the younger generation are facing a lot of competition and stress, which is negatively co-related to their mental wellness. 
+
+
+
+
 # 🧠 MindMate – Mental Wellness Tracker
 
 MindMate is a full-stack mental wellness web application built using Flask (Python) that allows users to track moods, maintain journals, build habits, follow goals, and improve overall well-being through simple daily check-ins and insights.
@@ -6,7 +23,7 @@ This project was developed as a hackathon submission to demonstrate full-stack d
 
 ---
 
-# 🚀 Features
+# 🚀 Unique Features
 
 - 🔐 User Authentication (Register / Login / Logout)
 - 😊 Daily Mood Check-ins
@@ -139,6 +156,10 @@ This project uses SQLite.
 The database file (`mindmate.db`) is already included but will also auto-update when the application runs.
 
 ---
+# Learnings and challenges 
+   - Integration issues: As this is our first time trying to integrate, we faced a ton of issues and in the process of fixing them we invested more time in fixing than creating something new.
+   - Achieving agreement on design choices had been very difficult for us as we all had different ideas and asthetic on UI/ user experiences.
+                 
 
 # 🧠 What This Project Demonstrates
 
@@ -152,6 +173,9 @@ The database file (`mindmate.db`) is already included but will also auto-update 
 - Clean UI with responsive design
 
 ---
+
+# Demo Link 
+
 
 # 🔮 Improvements (if there are no time constrains)
 
