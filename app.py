@@ -1,3 +1,4 @@
+from functools import wraps   # 🔹 add this import at the top with other imports
 from flask import Flask, render_template, request, jsonify, session, redirect, url_for
 from datetime import datetime, timedelta
 import os
@@ -31,13 +32,31 @@ def get_current_user():
 
 
 def login_required_redirect(f):
-    """Redirect to login if not authenticated"""
+    """Redirect to login if not authenticated OR user missing in DB"""
+    @wraps(f)
     def decorated_function(*args, **kwargs):
-        if 'user_id' not in session:
+        user = get_current_user()
+
+        # Session exists but user record missing (DB reset etc.)
+        if not user:
+            session.clear()
             return redirect('/')
+
         return f(*args, **kwargs)
-    decorated_function.__name__ = f.__name__
     return decorated_function
+
+
+def login_required_api(f):
+    """Return JSON error if user not logged in"""
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        user = get_current_user()
+        if not user:
+            session.clear()
+            return jsonify({'error': 'Not logged in'}), 401
+        return f(*args, **kwargs)
+    return decorated_function
+
 
 # ==================== AUTHENTICATION ====================
 
@@ -99,6 +118,9 @@ def logout():
 def dashboard():
     """Main dashboard"""
     user = get_current_user()
+
+    if not user:
+        return redirect('/')  # send back to login safely
 
     today = datetime.utcnow().date()
     today_checkin = CheckIn.query.filter_by(
@@ -246,6 +268,7 @@ def journal():
 
 
 @app.route('/api/journal', methods=['POST'])
+@login_required_api
 def create_journal():
     """Create journal entry"""
     user = get_current_user()
@@ -276,6 +299,7 @@ def create_journal():
 
 
 @app.route('/api/journal/<entry_id>', methods=['PUT'])
+@login_required_api
 def update_journal(entry_id):
     """Update journal entry"""
     user = get_current_user()
@@ -304,6 +328,7 @@ def update_journal(entry_id):
 
 
 @app.route('/api/journal/<entry_id>', methods=['DELETE'])
+@login_required_api
 def delete_journal(entry_id):
     """Delete journal entry"""
     user = get_current_user()
@@ -326,6 +351,7 @@ def delete_journal(entry_id):
 
 
 @app.route('/api/journal/history')
+@login_required_api
 def journal_history():
     """Get all journal entries"""
     user = get_current_user()

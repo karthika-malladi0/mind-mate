@@ -187,7 +187,11 @@ function deleteEntryConfirm(id, title) {
 }
 
 function deleteEntry(id) {
-    fetch(`/api/journal/${id}`, { method: 'DELETE' })
+    fetch(`/api/journal/${id}`, { 
+        method: 'DELETE',
+        credentials: 'same-origin'   
+    })
+
         .then(r => r.json())
         .then(data => {
             alert(data.message);
@@ -216,6 +220,7 @@ document.getElementById('journalForm').addEventListener('submit', async (e) => {
     try {
         const response = await fetch(url, {
             method: method,
+            credentials: 'same-origin',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data)
         });
