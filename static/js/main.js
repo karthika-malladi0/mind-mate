@@ -1,15 +1,20 @@
 // ==================== DARK MODE TOGGLE ====================
 document.addEventListener('DOMContentLoaded', function() {
-    // Initialize dark mode
+    console.log('🌙 Dark mode initializing...');
+    
+    // Initialize dark mode from localStorage
     const isDarkMode = localStorage.getItem('darkMode') === 'true';
     if (isDarkMode) {
         enableDarkMode();
     }
 
-    // Dark mode toggle
+    // Add click listener to dark mode toggle
     const darkModeToggle = document.getElementById('darkModeToggle');
     if (darkModeToggle) {
-        darkModeToggle.addEventListener('click', toggleDarkMode);
+        darkModeToggle.addEventListener('click', function(e) {
+            e.preventDefault();
+            toggleDarkMode();
+        });
     }
 });
 
@@ -26,12 +31,14 @@ function enableDarkMode() {
     document.body.classList.add('dark-mode');
     localStorage.setItem('darkMode', 'true');
     updateDarkModeIcon(true);
+    console.log('✅ Dark mode ENABLED');
 }
 
 function disableDarkMode() {
     document.body.classList.remove('dark-mode');
     localStorage.setItem('darkMode', 'false');
     updateDarkModeIcon(false);
+    console.log('✅ Light mode ENABLED');
 }
 
 function updateDarkModeIcon(isDark) {
@@ -39,10 +46,10 @@ function updateDarkModeIcon(isDark) {
     if (icon) {
         if (isDark) {
             icon.innerHTML = '<i class="fas fa-sun"></i>';
-            icon.title = 'Enable Light Mode';
+            icon.title = 'Switch to Light Mode';
         } else {
             icon.innerHTML = '<i class="fas fa-moon"></i>';
-            icon.title = 'Enable Dark Mode';
+            icon.title = 'Switch to Dark Mode';
         }
     }
 }
@@ -65,7 +72,6 @@ function showNotification(message, type = 'success') {
 
     document.body.appendChild(alertDiv);
 
-    // Auto remove after 5 seconds
     setTimeout(() => {
         alertDiv.remove();
     }, 5000);
@@ -78,7 +84,6 @@ function validateForm(formId) {
 
     let isValid = true;
 
-    // Check required fields
     form.querySelectorAll('[required]').forEach(field => {
         if (!field.value.trim()) {
             field.classList.add('is-invalid');
@@ -95,7 +100,7 @@ function validateForm(formId) {
 function showConfirmDialog(title, message, onConfirm) {
     const modal = document.createElement('div');
     modal.className = 'modal fade';
-    modal.id = 'confirmModal';
+    modal.id = 'confirmModal_' + Date.now();
     modal.tabIndex = -1;
     modal.innerHTML = `
         <div class="modal-dialog modal-dialog-centered">
@@ -121,7 +126,7 @@ function showConfirmDialog(title, message, onConfirm) {
     document.getElementById('confirmBtn').addEventListener('click', () => {
         onConfirm();
         confirmModal.hide();
-        modal.remove();
+        setTimeout(() => modal.remove(), 300);
     });
 
     confirmModal.show();
@@ -423,16 +428,13 @@ document.addEventListener('submit', function(e) {
 function exportToCSV(data, filename) {
     let csv = '';
     
-    // Headers
     const headers = Object.keys(data[0]);
     csv += headers.join(',') + '\n';
     
-    // Rows
     data.forEach(row => {
         csv += headers.map(header => `"${row[header]}"`).join(',') + '\n';
     });
 
-    // Download
     const blob = new Blob([csv], { type: 'text/csv' });
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement('a');

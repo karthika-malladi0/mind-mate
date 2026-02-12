@@ -1,3 +1,4 @@
+import os
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 import uuid
@@ -252,4 +253,4 @@ def init_db(app):
     """Initialize database with app"""
     with app.app_context():
         db.create_all()
-        print("✅ Database initialized successfully!")
+        print("✅ Database initialized!")

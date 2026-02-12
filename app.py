@@ -10,16 +10,15 @@ from config import config
 import csv
 from io import StringIO
 
-load_dotenv()
+# Don't need load_dotenv() - we'll use defaults
+# load_dotenv()  # Comment this out
 
 # ==================== CREATE APP ====================
 app = Flask(__name__)
-app.config.from_object(config[os.getenv('FLASK_ENV', 'development')])
+# Use development config by default
+app.config.from_object(config['development'])
 db.init_app(app)
 
-# Initialize database
-with app.app_context():
-    init_db(app)
 
 # ==================== SESSION HELPERS ====================
 
@@ -1026,4 +1025,7 @@ def server_error(e):
 
 
 if __name__ == '__main__':
+    with app.app_context():
+        db.create_all()
+        print("✅ Database initialized - In Memory!")
     app.run(debug=True, host='0.0.0.0', port=5000)
