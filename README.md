@@ -166,3 +166,13 @@ The database file (`mindmate.db`) is already included but will also auto-update 
 
 MindMate is designed as a beginner-friendly but feature-rich mental wellness platform that showcases practical full-stack development and user-centered design.
 
+
+# Team mates and their contributions
+
+Karthika : Coding,  Feature Generation, Promoting
+
+Shilpa sharma : Idea generation, voice over, Feature Generation,  Promoting
+
+Navitha Koya : Idea generation, Coding,  Feature Generation,  Promoting
+
+Jessika S: Idea generation, video editig,  Feature Generation,  Promoting
