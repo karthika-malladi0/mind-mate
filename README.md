@@ -169,10 +169,10 @@ MindMate is designed as a beginner-friendly but feature-rich mental wellness pla
 
 # Team mates and their contributions
 
-Karthika : Coding,  Feature Generation, Promoting
+Karthika : Coding,  Feature Generation, Prompting
 
-Shilpa sharma : Idea generation, voice over, Feature Generation,  Promoting
+Shilpa sharma : Idea generation, voice over, Feature Generation, prompting
 
-Navitha Koya : Idea generation, Coding,  Feature Generation,  Promoting
+Navitha Koya : Idea generation, Coding,  Feature Generation,  Prompting
 
-Jessika S: Idea generation, video editig,  Feature Generation,  Promoting
+Jessika S: Idea generation, video editig,  Feature Generation,  Prompting
