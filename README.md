@@ -60,4 +60,53 @@ mindmate/
 git clone https://github.com/karthika-malladi0/mind-mate.git
 cd mind-mate
 
+python -m venv venv
+
+venv\Scripts\activate
+
+source venv/bin/activate
+
+pip install -r requirements.txt
+
+python app.py
+
+Running on http://127.0.0.1:5000
+
+🗄 Database
+
+The app uses SQLite.
+The database file is automatically created the first time you run the app.
+
+🧠 Key Learning Outcomes
+
+This project demonstrates:
+
+Backend route handling with Flask
+
+Database design and CRUD operations
+
+API communication using JavaScript Fetch
+
+Data visualization with Chart.js
+
+User session management
+
+Full-stack integration
+
+🚀 Future Improvements
+
+Cloud deployment
+
+AI-based mood analysis
+
+Email or notification reminders
+
+Mobile-friendly version
+
+👨‍💻 Developed For
+
+College Hackathon Project – Built as a beginner-friendly full-stack mental wellness tracking system.
+
+
+
 
