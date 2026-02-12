@@ -1,10 +1,10 @@
 # Team Name: UniForge
 
 # Team members:-
- Karthika. M
- Navitha Koya
- Shilpa Sharma
- Jessika S
+ - Karthika. M
+ - Navitha Koya
+ - Shilpa Sharma
+ - Jessika S
 
 # Problem Statment-
 Nowadays students are experiencing high levels of stress and anxiety and lack of access to care and ineffective existing tools making it harder to manage their mental wellness.
