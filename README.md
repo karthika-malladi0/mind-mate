@@ -83,7 +83,7 @@ mindmate/
 
 ```bash
 git clone https://github.com/karthika-malladi0/mind-mate.git
-cd mindmate
+cd mind-mate
 ```
 
 ---
